@@ -10,12 +10,15 @@ import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import ch.makery.address.model.Person
 import ch.makery.address.view.PersonEditDialogController
+import scalafx.scene.image.Image
 import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp3:
 
   //Window Root Pane
   var roots: Option[scalafx.scene.layout.BorderPane] = None
+
+  var cssResource = getClass.getResource("view/DarkTheme.css")
 
   /* The data as an observable list of Persons.
   */
@@ -45,8 +48,10 @@ object MainApp extends JFXApp3:
 
     stage = new PrimaryStage():
       title = "AddressApp"
+      icons += new Image(getClass.getResource("/images/alien.png").toExternalForm)
       scene = new Scene():
         root = roots.get
+        stylesheets = Seq(cssResource.toExternalForm)
 
     // call to display PersonOverview when app start
     showPersonOverview()
@@ -64,11 +69,11 @@ object MainApp extends JFXApp3:
    * subscriber
    * - require data
    */
-  
+
   val stringA = new StringProperty("hello") //publisher
   val stringB = new StringProperty("sunway") //subscriber
   val stringC = new StringProperty("sunway") //subscriber
-  
+
   stringA.value = "world"
   stringB <==> stringA //biconditional - value binding from stringA to stringB everytime stringA changes and vice versa
   stringC <== stringA //value binding from stringA to stringB everytime stringA changes
@@ -82,7 +87,7 @@ object MainApp extends JFXApp3:
   stringA.onChange { (_, _, _) =>
     println(s"stringA has changed")
   }
-  
+
   stringA.value = "world"
 
   def showPersonEditDialog(person: Person): Boolean =
@@ -97,6 +102,7 @@ object MainApp extends JFXApp3:
       initOwner(stage)
       scene = new Scene:
         root = roots2
+        stylesheets = Seq(cssResource.toExternalForm)
 
     control.dialogStage = dialog
     control.person = person
