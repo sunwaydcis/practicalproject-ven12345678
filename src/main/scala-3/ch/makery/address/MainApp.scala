@@ -9,31 +9,27 @@ import javafx.scene as jfxs
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import ch.makery.address.model.Person
-import ch.makery.address.view.PersonEditDialogController
+import ch.makery.address.view.{PersonEditDialogController, PersonOverviewController}
 import scalafx.scene.image.Image
 import scalafx.stage.{Modality, Stage}
+import ch.makery.address.util.Database
 
 object MainApp extends JFXApp3:
+
+  Database.setupDB() // initialize the database
 
   //Window Root Pane
   var roots: Option[scalafx.scene.layout.BorderPane] = None
 
   var cssResource = getClass.getResource("view/DarkTheme.css")
+  var personOverviewController: Option[PersonOverviewController] = None
 
   /* The data as an observable list of Persons.
   */
   val personData = new ObservableBuffer[Person]() //anything that extends ObservableBuffer can use binding
   /* Constructor */
-  personData += new Person("Hans", "Muster") // add one value +=, multiple values ++=
-  personData += new Person("Ruth", "Mueller")
-  personData += new Person("Heinz", "Kurz")
-  personData += new Person("Cornelia", "Meier")
-  personData += new Person("Werner", "Meyer")
-  personData += new Person("Lydia", "Kunz")
-  personData += new Person("Anna", "Best")
-  personData += new Person("Stefan", "Meier")
-  personData += new Person("Martin", "Mueller")
-  
+  personData ++= Person.getAllPersons
+
   override def start(): Unit =
     // transform path of RootLayout.fxml to URI for resource location.
     val rootResource = getClass.getResource("view/RootLayout.fxml")
@@ -61,8 +57,9 @@ object MainApp extends JFXApp3:
     val loader = new FXMLLoader(resource)
     loader.load()
     val roots = loader.getRoot[jfxs.layout.AnchorPane]
+    val ctrl = loader.getController[PersonOverviewController]
     this.roots.get.center = roots
-  
+
   /**
    * publisher
    * - data

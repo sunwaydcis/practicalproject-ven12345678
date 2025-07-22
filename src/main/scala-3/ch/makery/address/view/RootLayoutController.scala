@@ -10,6 +10,10 @@ class RootLayoutController():
   @FXML
   def handleClose(action: ActionEvent): Unit = 
     MainApp.stage.close()
+    
+  @FXML
+  def handleDelete(action: ActionEvent): Unit =
+    MainApp.personOverviewController.map(x => x.handleDeletePerson(action))
   
   // This controller is just the root layout controller.
   // It doesn't do anything, but it is needed to be able to
